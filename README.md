@@ -1,4 +1,4 @@
-# IS2_Project_Vision
+# Intellihome
 
 ![Mockup](https://i.imgur.com/Vzzu1ay.jpg)
 
