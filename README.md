@@ -2,7 +2,7 @@
 
 ### Mockup
 
-![Mockup](https://i.imgur.com/iiBq62P.jpg)
+![Mockup](https://i.imgur.com/Vzzu1ay.jpg)
 
 ### Preview live
 
