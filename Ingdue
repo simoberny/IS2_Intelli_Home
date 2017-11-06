@@ -1,0 +1,53 @@
+Il sistema si occuperà di gestire la casa in accordo alle abitudini degli utenti, sfruttando l'API dialogflow
+
+Gli utenti hanno:
+	nome,
+	cognome,
+	età,
+	sesso,
+	password,
+	permessi,
+	in casa (boolean),
+	stanza attuale
+	
+l'utente si può trovare in una precisa stanza, il sistema saprà se ha cambiato stanza solo se può dedurlo con sicurezza (lo avvisa l'utente, o altro)
+
+Le stanze hanno:
+	oggetti (porte, finestre, luci, ecc...),
+	permessi,
+	oggetti di accesso
+
+L'utente potrà entrare nella stanza solo se ha i permessi necessari
+	le stanze avranno degli oggetti di accesso, cioè gli oggetti che permettono l'entrata nella stanza (porte, finestre o altro)
+
+Gli oggetti possono essere di lettura o scrittura
+
+Gli oggetti hanno:
+	nome,
+	stanza,
+	permessi,
+	nome plugin
+
+Gli oggetti saranno di tre tipi: a stati(forno), on/off(potrebbe non servire perchè ci sono gli stati)(luci), a range reale(termostato)
+
+Gli oggetti a stati hanno:
+	stato attuale,
+	stati
+
+Gli oggetti on/off hanno:
+	stato attuale
+
+Gli oggetti a range reale hanno:
+	stato attuale,
+	range
+
+I permessi possono essere
+	in base all'età
+	in base alla presenza o no in casa
+	in base alla presenza o no in stanza
+	in base alla persona specifica
+
+In base ai permessi che hanno, gli utenti possono essere divisi in gruppi
+
+Gli utenti possono richiedere permessi temoranei a chi è abilitato a concederli
+	
