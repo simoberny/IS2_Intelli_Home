@@ -7,25 +7,16 @@ Gli utenti hanno:
 	sesso,
 	password,
 	permessi,
-	in casa (boolean),
-	stanza attuale
-	
-l'utente si può trovare in una precisa stanza, il sistema saprà se ha cambiato stanza solo se può dedurlo con sicurezza (lo avvisa l'utente, o altro)
+	in casa (boolean)
 
 Le stanze hanno:
 	oggetti (porte, finestre, luci, ecc...),
-	permessi,
-	oggetti di accesso
-
-L'utente potrà entrare nella stanza solo se ha i permessi necessari
-	le stanze avranno degli oggetti di accesso, cioè gli oggetti che permettono l'entrata nella stanza (porte, finestre o altro)
 
 Gli oggetti possono essere di lettura o scrittura
 
 Gli oggetti hanno:
 	nome,
 	stanza,
-	permessi,
 	nome plugin
 
 Gli oggetti saranno di tre tipi: a stati(forno), on/off(potrebbe non servire perchè ci sono gli stati)(luci), a range reale(termostato)
@@ -41,13 +32,23 @@ Gli oggetti a range reale hanno:
 	stato attuale,
 	range
 
-I permessi possono essere
-	in base all'età
-	in base alla presenza o no in casa
-	in base alla presenza o no in stanza
-	in base alla persona specifica
-
-In base ai permessi che hanno, gli utenti possono essere divisi in gruppi
-
-Gli utenti possono richiedere permessi temoranei a chi è abilitato a concederli
+Il plugin dell'oggetto non è altro che una definizione di classe che implementa i seguenti metodi:
+	setup():  questo metodo sarà chiamato alla prima installazione dell'hardware
+	init():   questo metodo sarà chiamato all'accensione del sistema (o prima del primo utilizzo dell'oggetto)
+	update(): questo metodo sarà chiamato per fare l'update dello stato dell'oggetto
+	read():   questo metodo servirà per reperire informazioni dagli oggetti di lettura
+	
+Use case:
+	UTENTE:
+	L'utente compra una nuova finestra elettronica compatibile con IntelliHome,
+	collega la finestra al raspberry come nelle istruzioni del fornitore,
+	copia il plugin della finestra all'interno della cartella che di default contiene tutti i plugin,
+	dice al sistema di installare il nuovo hardware.
+	
+	SISTEMA:
+	Il sistema riceve il comando di installazione del nuovo hardware,
+	controlla se nuovi plugins sono presenti nella cartella dei plugins,
+	per ogni nuovo plugin esegue il metodo setup()
+	
+	A questo punto l'hardware è installato
 	
