@@ -7,14 +7,9 @@
 </head>
 <body class="container">
 
+<% include ../partials/navbar %>
 
-<nav class="navbar navbar-light">
-  <a class="navbar-brand" href="#">
-    <img src="https://home-assistant.io/demo/favicon-192x192.png" width="30" height="30" class="d-inline-block align-top" alt="">
-    IntelliHome
-  </a>
-  <i class="material-icons settings" data-toggle="modal" data-target="#exampleModal">settings</i>
-</nav>
+<div><h4 class="print-event"></h4></div>
 
 <div class="container-fluid">
   <div class="row justify-content-center">
@@ -41,12 +36,12 @@
         <div class="list-group part_2">
           <a class="list-group-item list-group-item-action flex-column align-items-start">
             <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">Luce Soggiorno</h5>
-              <div class="btn-group" role="group" aria-label="Basic example">
-          <button type="button" class="btn btn-secondary primo">On</button>
-          <button type="button" class="btn btn-secondary secondo">Off</button>
-          <button type="button" class="btn btn-secondary">Elimina</button>
-        </div>
+            <h5 class="mb-1">Luce Soggiorno</h5>
+            <div class="btn-group" role="group" aria-label="Luce Soggiorno">
+              <button type="button" class="btn btn-secondary primo" value="on">On</button>
+              <button type="button" class="btn btn-secondary secondo" value="off">Off</button>
+              <button type="button" class="btn btn-secondary">Elimina</button>
+            </div>
             </div>
             <p class="mb-1">Luce a led soggiorno in alto</p>
             <small></small>
@@ -54,9 +49,9 @@
           <a class="list-group-item list-group-item-action flex-column align-items-start">
             <div class="d-flex w-100 justify-content-between">
               <h5 class="mb-1">Tapparelle 1</h5>
-              <div class="btn-group" role="group" aria-label="Basic example">
-          <button type="button" class="btn btn-secondary"><i class="material-icons">expand_less</i></button>
-          <button type="button" class="btn btn-secondary"><i class="material-icons">expand_more</i></button>
+              <div class="btn-group" role="group" aria-label="Tapparelle bagno di sinistra">
+          <button type="button" class="btn btn-secondary" value="su"><i class="material-icons">expand_less</i></button>
+          <button type="button" class="btn btn-secondary" value="giù"><i class="material-icons">expand_more</i></button>
           <button type="button" class="btn btn-secondary">Close</button>
         </div>
             </div>
@@ -66,9 +61,9 @@
           <a class="list-group-item list-group-item-action flex-column align-items-start">
             <div class="d-flex w-100 justify-content-between">
               <h5 class="mb-1">Router wifi</h5>
-              <div class="btn-group" role="group" aria-label="Basic example">
-          <button type="button" class="btn btn-secondary primo">On</button>
-          <button type="button" class="btn btn-secondary secondo">Off</button>
+              <div class="btn-group" role="group" aria-label="Accensione router wifi">
+          <button type="button" class="btn btn-secondary primo" value="on">On</button>
+          <button type="button" class="btn btn-secondary secondo" value="off">Off</button>
           <button type="button" class="btn btn-secondary">Elimina</button>
         </div>
             </div>
@@ -78,9 +73,9 @@
             <a class="list-group-item list-group-item-action flex-column align-items-start">
             <div class="d-flex w-100 justify-content-between">
               <h5 class="mb-1">Router wifi</h5>
-              <div class="btn-group" role="group" aria-label="Basic example">
-          <button type="button" class="btn btn-secondary primo">On</button>
-          <button type="button" class="btn btn-secondary secondo">Off</button>
+              <div class="btn-group" role="group" aria-label="Accensione router wifi">
+          <button type="button" class="btn btn-secondary primo" value="on">On</button>
+          <button type="button" class="btn btn-secondary secondo" value="off">Off</button>
           <button type="button" class="btn btn-secondary">Elimina</button>
         </div>
             </div>
@@ -92,62 +87,33 @@
   </div>
 </div>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Impostazioni</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <ul class="list-group">
-      <li class="list-group-item">
-        <label class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input">
-              <span class="custom-control-indicator"></span>
-              <span class="custom-control-description">Check this custom checkbox</span>
-            </label>
-        </li>
-        <li class="list-group-item">
-            <label class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input">
-              <span class="custom-control-indicator"></span>
-              <span class="custom-control-description">Check this custom checkbox</span>
-            </label>
-        </li>
-        <li class="list-group-item">
-                <label class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input">
-              <span class="custom-control-indicator"></span>
-              <span class="custom-control-description">Check this custom checkbox</span>
-            </label>
-        </li>
-        <li class="list-group-item">
-            <label class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input">
-            <span class="custom-control-indicator"></span>
-            <span class="custom-control-description">Check this custom checkbox</span>
-            </label>
-        </li>
-    </ul>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Salva</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="container">
-    <div class="row justify-content-md-center">
-        <div class="col-12 col-sm-12 col-md-6">
-        </div>
-    </div>
+<% include ../partials/settings %>
 </div>
 <script>
+
+    var statoTapparelle = "idle";
+
+    $(".btn-group button").on("click", function(){
+        var evento = $(this).parent();
+        var label = evento.attr("aria-label");
+        var stato = $(this).val();
+
+        if(stato == statoTapparelle){
+            stato = "idle";
+            statoTapparelle = "idle";
+        }else{
+            statoTapparelle = stato;
+        }        
+
+        $.ajax({
+            method: "GET",
+            url: "/attuatori",
+            data: { evento: label, stato: stato }
+        }).done(function( data ) {
+            $(".print-event").html(data);
+        });
+    });
+
     $("#exampleInputEmail1").keypress(function(e) {
         if(e.which == 13) {
             ajax();
