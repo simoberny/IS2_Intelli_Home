@@ -32,7 +32,7 @@ apps.get('/attuatori', function(req, res) {
     var evento = req.query.evento;
     var stato = req.query.stato;
 
-    var resp = "<span style=\"color: red;\">AJAX:</span> " + evento + " - Stato evento: " + stato;
+    var resp = "<strong>AJAX:</strong> " + evento + " - Stato evento: " + stato;
 
     res.write(resp);
     res.end();

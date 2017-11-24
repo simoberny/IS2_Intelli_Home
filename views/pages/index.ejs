@@ -9,7 +9,10 @@
 
 <% include ../partials/navbar %>
 
-<div><h4 class="print-event"></h4></div>
+
+<div id="alert" class="alert-warning alert-dismissible fade show" role="alert">
+    <span class="print-event"></span>
+</div>
 
 <div class="container-fluid">
   <div class="row justify-content-center">
@@ -110,6 +113,7 @@
             url: "/attuatori",
             data: { evento: label, stato: stato }
         }).done(function( data ) {
+            $("#alert").addClass("alert").alert();
             $(".print-event").html(data);
         });
     });
