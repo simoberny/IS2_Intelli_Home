@@ -4,6 +4,6 @@ users:
 	password
 
 objects
-	name,
-	room,
+	name,(pk)
+	room,(pk)
 	pluginName

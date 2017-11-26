@@ -1,4 +1,4 @@
-var data = require('./database.js');
+var data = require('../databaseScripts/database.js');
 
 
 class Actuator{
@@ -10,24 +10,14 @@ class Actuator{
   }
 }
 
-var objects = {
-  readables: [],
-  writeables: []
-};
+var objects = [];
 
 
 var init = function(){
-
-  objects.readables.forEach(function(element){
+  objects.forEach(function(element){
     if(!element.act.init())
       console.log("problem while initializing " + element.name);
   });
-
-  objects.wtiteables.forEach(function(element){
-    if(!element.act.init())
-      console.log("problem while initializing " + element.name);
-  });
-
 };
 
 var populateObjects
