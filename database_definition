@@ -1,0 +1,9 @@
+users:
+	name(pk),
+	age,
+	password
+
+objects
+	name,(pk)
+	room,(pk)
+	pluginName
