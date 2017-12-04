@@ -1,9 +1,8 @@
 users:
 	name(pk),
-	age,
-	password
+	age
 
-objects
+things
 	name,(pk)
 	room,(pk)
 	pluginName

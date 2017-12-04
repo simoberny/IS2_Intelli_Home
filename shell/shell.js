@@ -1,23 +1,30 @@
 var data = require('../databaseScripts/database.js');
 
-
 class Actuator{
-  constructor(name, file, room){
+  constructor(name, room, pluginName){
     this.name = name;
-    this.file = file;
     this.room = room;
-    this.act  = require("plugins/"+name+"/code.js");
+    this.act  = require("../plugins/"+pluginName+"/code.js");
   }
 }
 
-var objects = [];
+var actuators = [];
 
-
-var init = function(){
-  objects.forEach(function(element){
-    if(!element.act.init())
-      console.log("problem while initializing " + element.name);
+function setupAll(){
+  data.getAllActuators(function(result){
+    result.forEach(function(el){
+      actuators.push(new Actuator(el.name, el.room, el.plugin_name));
+    });
+    initAllActuators();
   });
-};
+}
 
-var populateObjects
+function initAllActuators(){
+  actuators.forEach(function(el){
+    el.act.init();
+  });
+}
+
+setupAll();
+
+data.end();

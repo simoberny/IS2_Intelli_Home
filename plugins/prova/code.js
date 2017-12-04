@@ -4,7 +4,6 @@ exports.setup = function(){
 
 exports.init = function(){
 	console.log("i've been inited :)");
-  return true;
 }
 
 exports.update = function(){
