@@ -20,4 +20,10 @@ exports.getAllActuators = function(callback){
   });
 }
 
+exports.addActuator = function(name, room, pluginName, callback){
+  con.query("INSERT INTO actuators (name, room, plugin_name) VALUES ('" + name + "', '" + room + "', '" + pluginName + "')", function (err, result) {
+    if (err) callback();
+  });
+}
+
 exports.end = function(){con.end();}
