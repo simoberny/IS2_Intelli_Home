@@ -1,15 +1,19 @@
 const fs = require('fs');
+const rmR = require('rimraf');
 
 var data = require('../databaseScripts/database.js');
 
 
 
 var actuators = {
+  info: [],
   actuators: [],
   addActuator: function(name, room, pluginName){
     var res = true;
-    if(this.checkPluginValidity(pluginName))
+    if(this.checkPluginValidity(pluginName)){
       this.actuators[name + " " + room] = require("../plugins/" + pluginName + "/code.js");
+      this.info[name + " " + room] = pluginName;
+    }
     else{
       console.log("error while loading actuator " + name + " in room: " + room);
       res = false;
@@ -22,9 +26,12 @@ var actuators = {
     if(fs.existsSync(path)){
       if(fs.existsSync(path + "/code.js") && fs.existsSync(path + "/version")){
         result = true;
-      }else console.log("plugin " + pluginName + " not valid");
-    }else console.log("plugin " + pluginName + " not found");
+      }else console.log("plugin " + plugin + " not valid");
+    }else console.log("plugin " + plugin + " not found");
     return result;
+  },
+  getActuatorPath: function(name, room){
+    return "../plugins/" + this.info[name + " " + room];
   },
   getActuator: function(name, room){
     return this.actuators[name + " " + room];
@@ -76,6 +83,22 @@ exports.installActuator = function(actuator){
   return result;
 }
 
+exports.removeActuator = function(actuator, files){
+  var result = true;
+
+  data.removeActuator(actuator.name, actuator.room, function(){
+    result = false;
+    console.log("error while removing the actuator from the database, please retry or contact system admin");
+  });
+
+  if(files)
+    rmR(actuators.getActuatorPath(actuator.name, actuator.room), function(err){
+      if(err)
+        console.log("error while deleting files, but the actuator has been removed");
+    });
+
+  return result;
+}
 
 exports.shutDown = function(){
   data.end();

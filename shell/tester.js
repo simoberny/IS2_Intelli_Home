@@ -1,7 +1,7 @@
 var shell = require("./shell.js");
 
 setTimeout(function(){
-  shell.executeCommand({name: "luce", room: "prova", value: "testcommand"});
+  shell.removeActuator({name: "prova", room: "prova", pluginName: "prova"});
 
   shell.shutDown();
 }, 3000);

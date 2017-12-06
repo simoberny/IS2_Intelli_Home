@@ -26,4 +26,10 @@ exports.addActuator = function(name, room, pluginName, callback){
   });
 }
 
+exports.removeActuator = function(name, room, callback){
+  con.query("DELETE FROM actuators WHERE name = '" + name + "' AND room = '" + room + "'", function (err, result) {
+    if (err) callback();
+  });
+}
+
 exports.end = function(){con.end();}
