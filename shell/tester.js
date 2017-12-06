@@ -1,7 +1,6 @@
 var shell = require("./shell.js");
 
-setTimeout(function(){
-  shell.removeActuator({name: "prova", room: "prova", pluginName: "prova"});
-
+setTimeout(function(){ //il setTimeout è (per adesso) necessario dato che le cose non sono sincrone
+  
   shell.shutDown();
 }, 3000);
