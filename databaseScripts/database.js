@@ -1,29 +1,35 @@
-var mongo = require("mongodb");
-var url = "mongodb://localhost:27017/intelliHomeDatabase";
+var mysql = require('mysql');
+
+var con = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "temporaneaprogetto",
+  database: "progettoIngegneria"
+});
+
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+});
 
 
-exports.insertUser = function(name, age, password){
-  mongo.connect(url, function(err, db) {
-    if (err) throw err;
-    db.collection("users").insertOne({_id: name, name: name, age: age, password: password});
-    db.close();
+exports.getAllActuators = function(callback){
+  con.query("select * from actuators", function (err, result) {
+    if(err) throw err;
+    else callback(result);
   });
 }
 
-exports.insertObject = function(name, room, pluginName){
-  mongo.connect(url, function(err, db) {
-    if (err) throw err;
-    db.collection("objects").insertOne({_id: name + " " + room, name: name, room: room, pluginName: pluginName});
-    db.close();
+exports.addActuator = function(name, room, pluginName, callback){
+  con.query("INSERT INTO actuators (name, room, plugin_name) VALUES ('" + name + "', '" + room + "', '" + pluginName + "')", function (err, result) {
+    if (err) callback();
   });
 }
 
-exports.getAllObjects = function(){
-  var res;
-  mongo.connect(url, function(err, db) {
-    if (err) throw err;
-    res = db.collection('objects').find({});
-    db.close();
+exports.removeActuator = function(name, room, callback){
+  con.query("DELETE FROM actuators WHERE name = '" + name + "' AND room = '" + room + "'", function (err, result) {
+    if (err) callback();
   });
-  return res;
 }
+
+exports.end = function(){con.end();}

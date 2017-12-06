@@ -1,15 +1,16 @@
-function setup(){
+exports.setup = function(){
 	//setup operations
 }
 
-function init(){
-	//init operations
+exports.init = function(){
+	console.log("i've been inited :)");
+  return true;
 }
 
-function update(){
+exports.update = function(){
 	//update operations
 }
 
-function read(){
+exports.read = function(){
 	//read operations
 }
