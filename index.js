@@ -3,7 +3,7 @@ var session = require('express-session');
 var url = require('url');
 var http = require('http');
 var speech = require('./speech.js');
-var navigator = require('web-midi-api');
+//var navigator = require('web-midi-api');
 
 const host = 'api.worldweatheronline.com';
 const wwoApiKey = 'fda2e356d0ba46ecbc7153434171511';
@@ -17,11 +17,11 @@ apps.set('view engine', 'ejs');
 apps.set('port', (process.env.PORT || 8080));
 apps.use(express.static('public'));
 
-if ('serviceWorker' in navigator) {
+/*if ('serviceWorker' in navigator) {
     navigator.serviceWorker
              .register('./service-worker.js')
              .then(function() { console.log('Service Worker Registered'); });
-}
+}*/
 
 apps.get('/', function(req, res) {
     if(!req.session.message){
