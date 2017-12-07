@@ -16,7 +16,10 @@ var filesToCache = [
   '/',
   '/index.js',
   '/speech.js',
-  '/views/pages/index.ejs'
+  '/views/pages/index.ejs',
+  '/views/partials/head.ejs',
+  '/views/partials/navbar.ejs',
+  '/views/partials/settings.ejs'
 ];
 
 self.addEventListener('install', function(e) {
@@ -41,6 +44,41 @@ self.addEventListener('activate', function(e) {
       }));
     })
   );
+
+  //Adding `fetch` event listener
+self.addEventListener('fetch', (event) => {
+  console.info('Event: Fetch');
+
+  var request = event.request;
+
+  //Tell the browser to wait for newtwork request and respond with below
+  event.respondWith(
+    //If request is already in cache, return it
+    caches.match(request).then((response) => {
+      if (response) {
+        return response;
+      }
+
+      // // Checking for navigation preload response
+      // if (event.preloadResponse) {
+      //   console.info('Using navigation preload');
+      //   return response;
+      // }
+
+      //if request is not cached or navigation preload response, add it to cache
+      return fetch(request).then((response) => {
+        var responseToCache = response.clone();
+        caches.open(cacheName).then((cache) => {
+            cache.put(request, responseToCache).catch((err) => {
+              console.warn(request.url + ': ' + err.message);
+            });
+          });
+
+        return response;
+      });
+    })
+  );
+});
   /*
    * Fixes a corner case in which the app wasn't returning the latest data.
    * You can reproduce the corner case by commenting out the line below and

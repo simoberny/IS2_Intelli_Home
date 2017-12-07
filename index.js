@@ -14,14 +14,8 @@ var apps = express();
 apps.use(session({ secret: 'quellochevuoi', resave: true, saveUninitialized: true}));
 
 apps.set('view engine', 'ejs');
-apps.set('port', (process.env.PORT || 8080));
-apps.use(express.static('public'));
-
-/*if ('serviceWorker' in navigator) {
-    navigator.serviceWorker
-             .register('./service-worker.js')
-             .then(function() { console.log('Service Worker Registered'); });
-}*/
+apps.set('port', (process.env.PORT || 8081));
+apps.use(express.static(__dirname));
 
 apps.get('/', function(req, res) {
     if(!req.session.message){
