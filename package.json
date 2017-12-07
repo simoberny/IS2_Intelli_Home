@@ -12,6 +12,9 @@
     "apiai": "^4.0.3",
     "ejs": "^2.5.7",
     "express": "^4.16.2",
-    "express-session": "^1.15.6"
+    "express-session": "^1.15.6",
+    "web-midi-api": "^1.4.4",
+    "jazz-midi": "^1.5.3",
+    "webmidi": "^2.0.0-rc.5"
   }
 }
