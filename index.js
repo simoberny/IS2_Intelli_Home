@@ -10,6 +10,7 @@ const wwoApiKey = 'fda2e356d0ba46ecbc7153434171511';
 
 var apps = express();
 
+
 apps.use(session({ secret: 'quellochevuoi', resave: true, saveUninitialized: true}));
 
 apps.set('view engine', 'ejs');
