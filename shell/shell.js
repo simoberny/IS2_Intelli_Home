@@ -65,7 +65,9 @@ data.getAllActuators(function(result){
 
 
 exports.executeCommand = function(command){
-  return actuators.updateActuator(command.name, command.room, command.value);
+  if(command.rw == w)
+    return actuators.updateActuator(command.name, command.room, command.value);
+  return actuators.readFromActuator(command.name, command.room);
 }
 
 exports.installActuator = function(actuator){
@@ -94,7 +96,7 @@ exports.removeActuator = function(actuator, files){
   if(files)
     rmR(actuators.getActuatorPath(actuator.name, actuator.room), function(err){
       if(err)
-        console.log("error while deleting files, but the actuator has been removed");
+        console.log("error while deleting files");
     });
 
   return result;
