@@ -1,0 +1,362 @@
+<!-- views/pages/index.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/head %>
+</head>
+<body class="container">
+
+<% include ../partials/navbar %>
+
+
+<div id="alert" class="alert-warning alert-dismissible fade show" role="alert">
+    <span class="print-event"></span>
+</div>
+
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="chat">
+        <input type="text" name="input" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Chiedimi qualcosa">  
+        <div class="action_button" id="startBtn" disabled="disabled">
+          <i class="material-icons">mic</i>
+        </div>
+      </div>
+        <span class="badge badge-secondary" id="info-mic"></span>
+        <span class="badge badge-secondary" id="ipotesi"></span>
+        <button type="hidden" style="display: none;" class="" id="stopBtn" disabled="disabled">Stop</button>
+
+        <div class="container-chat">
+                <ul class="chat-thread">
+                <% messages.forEach(function(message) { %> 
+                    <li class="<%= message.position %>"><%= message.text %></li>
+                <% }); %>
+            </ul>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-8">
+        <div class="list-group part_2">
+          <a class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">Luce Soggiorno</h5>
+            <div class="btn-group" role="group" aria-label="Luce Soggiorno">
+              <button type="button" class="btn btn-secondary primo" value="on">On</button>
+              <button type="button" class="btn btn-secondary secondo" value="off">Off</button>
+              <h1 id="light"></h1>
+            </div>
+            </div>
+            <p class="mb-1">Luce a led soggiorno in alto</p>
+            <small></small>
+          </a>
+          <a class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">Tapparelle 1</h5>
+              <div class="btn-group" role="group" aria-label="Tapparelle bagno di sinistra">
+          <button type="button" class="btn btn-secondary" value="su"><i class="material-icons">expand_less</i></button>
+          <button type="button" class="btn btn-secondary" value="giù"><i class="material-icons">expand_more</i></button>
+        </div>
+            </div>
+            <p class="mb-1">Tapparelle bagno di sinistra</p>
+            <small class="text-muted"></small>
+          </a>
+          <a class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">Router wifi</h5>
+              <div class="btn-group" role="group" aria-label="Accensione router wifi">
+          <button type="button" class="btn btn-secondary primo" value="on">On</button>
+          <button type="button" class="btn btn-secondary secondo" value="off">Off</button>
+        </div>
+            </div>
+            <p class="mb-1">Accensione router wifi</p>
+            <small class="text-muted">SSID: Unitn-x</small>
+          </a>
+            <a class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">Router wifi</h5>
+              <div class="btn-group" role="group" aria-label="Accensione router wifi">
+          <button type="button" class="btn btn-secondary primo" value="on">On</button>
+          <button type="button" class="btn btn-secondary secondo" value="off">Off</button>
+        </div>
+            </div>
+            <p class="mb-1">Accensione router wifi</p>
+            <small class="text-muted">SSID: Unitn-x</small>
+          </a>
+        </div>
+    </div>
+  </div>
+</div>
+
+<% include ../partials/settings %>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+<script>
+  var socket = io();
+
+  socket.on('light', function (data) { //get button status from client
+    $("#light").text(" " + data); //change checkbox according to push button on Raspberry Pi
+    console.log(" " + data);
+  });
+</script>
+<script src="../../public/main.js"></script>
+<script>
+
+    var statoTapparelle = "idle";
+
+    $(".btn-group button").on("click", function(){
+        var evento = $(this).parent();
+        var label = evento.attr("aria-label");
+        var stato = $(this).val();
+
+        if(stato == statoTapparelle){
+            stato = "idle";
+            statoTapparelle = "idle";
+        }else{
+            statoTapparelle = stato;
+        }        
+
+        $.ajax({
+            method: "GET",
+            url: "/attuatori",
+            data: { evento: label, stato: stato }
+        }).done(function( data ) {
+            $("#alert").addClass("alert").alert();
+            $(".print-event").html(data);
+        });
+    });
+
+    $("#exampleInputEmail1").keypress(function(e) {
+        if(e.which == 13) {
+            ajax();
+        }
+    });
+
+    function ajax(){
+        var val = $("#exampleInputEmail1").val();
+        if(val){
+            $("#exampleInputEmail1").val("");
+            $(".chat-thread").append("<li class=\"me\">" + val +"<li>");
+            console.log("VAlore: " + val);
+            $.ajax({
+                method: "GET",
+                url: "/ajax",
+                data: { data: val }
+            }).done(function( data ) {
+                $(".chat-thread").append("<li class=\"comp\">" + data +"<li>");
+                $('.container-chat').animate({scrollTop: $('.container-chat').prop("scrollHeight")}, 50);
+            });
+        }
+    }
+</script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.3/require.min.js"></script>
+        <!-- SDK REFERENCE -->
+        <script src="../../public/speech.browser.sdk.js"></script>
+
+        <script>
+            // On document load resolve the SDK dependency
+            function Initialize(onComplete) {
+                require(["Speech.Browser.Sdk"], function(SDK) {
+                    onComplete(SDK);
+                });
+            }
+            
+            // Setup the recognizer
+            function RecognizerSetup(SDK, recognitionMode, language, format, subscriptionKey) {
+                
+                switch (recognitionMode) {
+                    case "Interactive" :
+                        recognitionMode = SDK.RecognitionMode.Interactive;    
+                        break;
+                    case "Conversation" :
+                        recognitionMode = SDK.RecognitionMode.Conversation;    
+                        break;
+                    case "Dictation" :
+                        recognitionMode = SDK.RecognitionMode.Dictation;    
+                        break;
+                    default:
+                        recognitionMode = SDK.RecognitionMode.Interactive;
+                }
+    
+                var recognizerConfig = new SDK.RecognizerConfig(
+                    new SDK.SpeechConfig(
+                        new SDK.Context(
+                            new SDK.OS(navigator.userAgent, "Browser", null),
+                            new SDK.Device("SpeechSample", "SpeechSample", "1.0.00000"))),
+                    recognitionMode,
+                    language, // Supported languages are specific to each recognition mode. Refer to docs.
+                    format); // SDK.SpeechResultFormat.Simple (Options - Simple/Detailed)
+    
+    
+                var useTokenAuth = false;
+                
+                var authentication = function() {
+                    if (!useTokenAuth)
+                        return new SDK.CognitiveSubscriptionKeyAuthentication(subscriptionKey);
+    
+                    var callback = function() {
+                        var tokenDeferral = new SDK.Deferred();
+                        try {
+                            var xhr = new(XMLHttpRequest || ActiveXObject)('MSXML2.XMLHTTP.3.0');
+                            xhr.open('GET', '/token', 1);
+                            xhr.onload = function () {
+                                if (xhr.status === 200)  {
+                                    tokenDeferral.Resolve(xhr.responseText);
+                                } else {
+                                    tokenDeferral.Reject('Issue token request failed.');
+                                }
+                            };
+                            xhr.send();
+                        } catch (e) {
+                            window.console && console.log(e);
+                            tokenDeferral.Reject(e.message);
+                        }
+                        return tokenDeferral.Promise();
+                    }
+    
+                    return new SDK.CognitiveTokenAuthentication(callback, callback);
+                }();
+                
+
+                return SDK.CreateRecognizer(recognizerConfig, authentication);
+
+            }
+    
+            // Start the recognition
+            function RecognizerStart(SDK, recognizer) {
+                recognizer.Recognize((event) => {
+                    /*
+                     Alternative syntax for typescript devs.
+                     if (event instanceof SDK.RecognitionTriggeredEvent)
+                    */
+                    switch (event.Name) {
+                        case "RecognitionTriggeredEvent" :
+                            UpdateStatus("Initializing");
+                            break;
+                        case "ListeningStartedEvent" :
+                            UpdateStatus("Listening");
+                            break;
+                        case "RecognitionStartedEvent" :
+                            UpdateStatus("Listening_Recognizing");
+                            break;
+                        case "SpeechStartDetectedEvent" :
+                            UpdateStatus("Listening_DetectedSpeech_Recognizing");
+                            console.log(JSON.stringify(event.Result)); // check console for other information in result
+                            break;
+                        case "SpeechHypothesisEvent" :
+                            UpdateRecognizedHypothesis(event.Result.Text, false);
+                            console.log(JSON.stringify(event.Result)); // check console for other information in result
+                            break;
+                        case "SpeechFragmentEvent" :
+                            UpdateRecognizedHypothesis(event.Result.Text, true);
+                            console.log(JSON.stringify(event.Result)); // check console for other information in result
+                            break;
+                        case "SpeechEndDetectedEvent" :
+                            OnSpeechEndDetected();
+                            UpdateStatus("Processing_Adding_Final_Touches");
+                            console.log(JSON.stringify(event.Result)); // check console for other information in result
+                            break;
+                        case "SpeechSimplePhraseEvent" :
+                            UpdateRecognizedPhrase(JSON.stringify(event.Result, null, 3));
+                            $("#exampleInputEmail1").val(event.Result.DisplayText);
+                            ajax();
+                            break;
+                        case "SpeechDetailedPhraseEvent" :
+                            UpdateRecognizedPhrase(JSON.stringify(event.Result, null, 3));
+                            $("#exampleInputEmail1").val(event.Result.DisplayText);
+                            ajax();
+                            break;
+                        case "RecognitionEndedEvent" :
+                            OnComplete();
+                            UpdateStatus("Idle");
+                            console.log(JSON.stringify(event)); // Debug information
+                            break;
+                        default:
+                            console.log(JSON.stringify(event)); // Debug information
+                    }
+                })
+                .On(() => {
+                    // The request succeeded. Nothing to do here.
+                },
+                (error) => {
+                    console.error(error);
+                });
+            }
+    
+            // Stop the Recognition.
+            function RecognizerStop(SDK, recognizer) {
+                // recognizer.AudioSource.Detach(audioNodeId) can be also used here. (audioNodeId is part of ListeningStartedEvent)
+                recognizer.AudioSource.TurnOff();
+            }
+        </script>
+    
+        <!-- Browser Hooks -->
+        <script>
+            var startBtn, stopBtn;
+            var SDK;
+            var recognizer;
+    
+            document.addEventListener("DOMContentLoaded", function () {
+                createBtn = document.getElementById("createBtn");
+                startBtn = document.getElementById("startBtn");
+                stopBtn = document.getElementById("stopBtn");
+    
+                startBtn.addEventListener("click", function () {
+                    Setup();
+                    RecognizerStart(SDK, recognizer);
+                    startBtn.disabled = true;
+                    stopBtn.disabled = false;                     
+                });
+    
+                stopBtn.addEventListener("click", function () {
+                    RecognizerStop(SDK, recognizer);
+                    startBtn.disabled = false;
+                    stopBtn.disabled = true;
+                });
+    
+                Initialize(function (speechSdk) {
+                    SDK = speechSdk;
+                    startBtn.disabled = false;
+                });
+            });
+    
+            function Setup() {
+                //IMPOSTAZIONI INIZIALI RICONOSCIMENTO VOCALE
+                recognizer = RecognizerSetup(SDK, "Interactive", "it-IT", SDK.SpeechResultFormat["Simple"], "e284bee186ab40cc996abd5d617977cd");
+            }
+    
+            function UpdateStatus(status) {
+                $("#info-mic").text("Stato:" +  status);
+            }
+    
+            function UpdateRecognizedHypothesis(text, append) {
+                if(append){
+                    $("#ipotesi").text(text + " ");
+                }else{
+                    $("#ipotesi").text(text);
+                }
+
+                var length = $("#ipotesi").text(text).length;
+
+                if(length > 403){
+                    $("#ipotesi").text("..." + $("#ipotesi").text().substr(lenth-400, length));
+                }
+
+            }
+    
+            function OnSpeechEndDetected() {
+                stopBtn.disabled = true;
+            }
+    
+            function UpdateRecognizedPhrase(json) {
+
+            }
+    
+            function OnComplete() {
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+            }
+        </script>
+</body>
+</html>
