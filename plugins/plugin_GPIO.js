@@ -2,15 +2,42 @@ var exports = module.exports = {};
 
 var Gpio = require('onoff').Gpio;
 
-var funz_ack_padre=[];
+var ambienti=[];
+
+function Ambiente_luce(call_back){
+    this.past_time = 0;
+    this.last_staus = 0;
+    this.callback=call_back;
+  }
+  // class methods
+  Ambiente_luce.crea_ascolto = function(pin,pout){
+    console.log(this.callback);
+    var ascolto = new Gpio(17, 'in', 'both');
+    var out = new Gpio(4, 'out');
+
+    ascolto.watch(function (err, value) {
+        if(new Date().getTime()-past_time>200 && last_staus==0){
+            console.log(new Date().getTime()+"   "+past_time);
+            out.writeSync(1);
+            past_time=new Date().getTime();
+            last_staus=1;
+            this.callback(1);
+        }else if(new Date().getTime()-past_time>200 && last_staus==1){
+            out.writeSync(0);
+            past_time=new Date().getTime();
+            this.callback(0); //ATTENZIOE! se premo pulsente e non c'è nessun soket collegato la funzione non esiste e termina con errore
+            last_staus=0;
+        }
+    });
+}
+
+
 global.count = 0;
 
 var mappa;
 
 global.bind = function(funz,i){
-    funz_ack_padre[i]=funz;
-    console.log(funz_ack_padre[i])
-
+    Ambiente_luce(funz);
 }
 
 exports.setup = function(map){
@@ -20,27 +47,11 @@ exports.setup = function(map){
         if(map[i].tipo == "luce"){
             //progremma per la gestione delle luci:
             nome = mappa[i].funzione_ricezione
-            var f = new Function('variabile,exports','exports.'+nome+' = function(funz){bind(funz,0);}');
-            f(funz_ack_padre,exports);
-            crea_ascolto(mappa[i].in1,0,map[i].out1);
-            //count++       //nota B: da implementare!! se no va solo una luce!!!!
+            //necessario per creare una funzione con nome definito a runtime! (nome assegnato dal'oggetto map.funzione_ricezione)
+            var f = new Function('exports','exports.'+nome+' = function(funz){bind(funz,0);}');
+            f(exports);
+            Ambiente_luce.crea_ascolto(mappa[i].in1,map[i].out1);
+            count++       //nota B: da implementare!! se no va solo una luce!!!!
         }
     }
-}
-
-function crea_ascolto(pin,fun_padre,out){
-    console.log(fun_padre)
-    var valore = fun_padre;
-    var ascolto = new Gpio(17, 'in', 'both');
-    var out = new Gpio(4, 'out');
-
-    ascolto.watch(function (err, value) {
-        if(out.readSync() == 0){
-            out.writeSync(1);
-            funz_ack_padre[fun_padre](1);
-        }else{
-            out.writeSync(0);
-            funz_ack_padre[fun_padre](0);
-        }
-    });
 }
