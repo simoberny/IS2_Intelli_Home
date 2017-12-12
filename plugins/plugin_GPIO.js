@@ -55,10 +55,7 @@ class Ambiente_tap{
         this.ascolto_up = ascolto_up;
         this.ascolto_down =  ascolto_down;
         this.out_up = out_up;
-        this.out_down = out_down;
-
-        var up=0;
-        var down =0;
+        this.out_down = out_down;        
 
         var lock_up = this.lock_up;
         var lock_down = this.lock_down;
@@ -72,7 +69,7 @@ class Ambiente_tap{
                 out_down.writeSync(0);
                 out_up.writeSync(1);
             }
-            up=value;
+           
             if(value == 0) lock_up = 0;
             if(value == 1) lock_up = 1;
         },100);
@@ -83,37 +80,32 @@ class Ambiente_tap{
                 out_up.writeSync(0);
                 out_down.writeSync(1);
             }
-            down=value;
             if(value == 0) lock_down = 0;
             if(value == 1) lock_down = 1;
         },100)
-
-    
     }
 
-    setup(up,down){
-        if(up==1){
-            if(out_up.readSync() ==1 && out_down.readSync()==0){
-                out_up.writeSync(0);
-            }
-            if(out_up.readSync() ==0){
-                out_down.writeSync(0);
-                out_up.writeSync(1);
-            }
-        }
-        if(down==1){
-            if(out_up.readSync() ==0 && out_down.readSync()==1){
-                out_down.writeSync(0);
-            }
-            if(out_down.readSync() ==0){
-                out_up.writeSync(0);
-                out_down.writeSync(1);
+    setup(code){
+        if(code==0){ //su
+            if(this.out_up.readSync() ==1 && this.out_down.readSync()==0){
+                this.out_up.writeSync(0);
+            }else if(this.out_up.readSync() ==0 ){
+                this.out_down.writeSync(0);
+                this.out_up.writeSync(1);
             }
         }
+        if(code==1){ //giu
+            if(this.out_up.readSync() ==0 && this.out_down.readSync()==1){
+                this.out_down.writeSync(0);
+            }else if(this.out_down.readSync() ==0){
+                this.out_up.writeSync(0);
+                this.out_down.writeSync(1);
+            }
+        }
+
     }
+
 }
-
-
 global.bind = function(funz,i,count){
     ambienti[count] = new Ambiente_luce(funz);
     ambienti[count].crea_ascolto(mappa[i].in1,mappa[i].out1);
@@ -136,10 +128,9 @@ exports.setup = function(map){
         else if(map[i].tipo == "tapp"){
             ambienti_tap[count_tap] = new Ambiente_tap();
             ambienti_tap[count_tap].crea_ascolto(mappa[i].in_up,mappa[i].out_up,mappa[i].in_down,mappa[i].out_down);
-            //var f1 = new Function('exports,Gpio','exports.'+mappa[i].funzione_azione+' = function(out_up,out_down){var out = new Gpio('+map[i].out1+', "out"); out.writeSync(stato);}');
-            //f1(exports,Gpio);
+            var f1 = new Function('exports,Gpio,tapparella','exports.'+mappa[i].funzione_azione+' = function(code){tapparella.setup(code)}');
+            f1(exports,Gpio,ambienti_tap[count_tap]);
             //count_tap++;
         }
-        
     }
 }
