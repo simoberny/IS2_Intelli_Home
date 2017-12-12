@@ -21,7 +21,7 @@ const wwoApiKey = 'fda2e356d0ba46ecbc7153434171511';
 
 
 //mappa link input output e azioni
-var map = [{tipo:'luce',out1:'4',in1:'17',funzione_azione:'set_ogg1',funzione_ricezione:'read_ogg1'},{tipo:'luce',out1:'27',in1:'22',funzione_azione:'set_ogg2',funzione_ricezione:'read_ogg2'}]
+var map = [{tipo:'luce',out1:'4',in1:'17',funzione_azione:'set_ogg1',funzione_ricezione:'read_ogg1'},{tipo:'luce',out:'27',in1:'22',funzione_azione:'set_ogg2',funzione_ricezione:'read_ogg2'},{tipo:'tapp',out_up:'27',in_up:'22',out_down:'27',in_down:'22',funzione_azione:'set_ogg2',funzione_ricezione:'read_ogg2'}]
 
 
 
