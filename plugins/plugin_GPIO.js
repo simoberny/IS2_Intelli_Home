@@ -24,10 +24,10 @@ class Ambiente_luce{
             //console.log("pulsante "+value);
             if(out.readSync()==0 && lock==0){
                 out.writeSync(1);
-                callback(1);
+                try{callback(1)}catch(error){}//se nessun soket è collegato la funzione callback non esiste quindi non inviare niente!
             }else if(out.readSync()==1 && lock==0){
                 out.writeSync(0);
-                callback(0); //ATTENZIOE! se premo pulsente e non c'è nessun soket collegato la funzione non esiste e termina con errore
+                try{callback(0)}catch(error){}
             }
                 if(value == 0) lock = 0;
                 if(value == 1) lock = 1;

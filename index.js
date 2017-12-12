@@ -80,8 +80,8 @@ apps.get('/attuatori', function(req, res) {
     var resp = "<strong>AJAX:</strong> " + evento + " - Stato evento: " + stato;
 
     var out = req.query.stato == "on" ? 1 : 0;
-    //GPIO.set_ogg2(out);
-    GPIO.set_ogg3(out);
+    GPIO.set_ogg2(out);
+    //GPIO.set_ogg3(out);
     //LED.writeSync(out);
 
     res.write(resp);
