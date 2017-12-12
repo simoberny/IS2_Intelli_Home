@@ -21,14 +21,14 @@ const wwoApiKey = 'fda2e356d0ba46ecbc7153434171511';
 
 
 //mappa link input output e azioni
-var map = [{tipo:'luce',out1:'4',in1:'17',funzione_azione:'set_ogg1',funzione_ricezione:'read_ogg1'},{tipo:'luce',out1:'27',in1:'22',funzione_azione:'set_ogg2',funzione_ricezione:'read_ogg2'}]
+var map = [{tipo:'luce',out1:'4',in1:'17',funzione_azione:'set_ogg1',funzione_ricezione:'read_ogg1'},{tipo:'luce',out1:'27',in1:'22',funzione_azione:'set_ogg2',funzione_ricezione:'read_ogg2'},{tipo:'tapp',in_up:'10',out_up:'9',in_down:'23',out_down:'24',funzione_azione:'set_ogg3'}]
 
 
 
 apps.use(session({ secret: 'quellochevuoi', resave: true, saveUninitialized: true}));
 
 apps.set('view engine', 'ejs');
-apps.set('port', (process.env.PORT || 8082));
+apps.set('port', (process.env.PORT || 8081));
 apps.use(express.static(__dirname));
 
 apps.get('/', function(req, res) {
