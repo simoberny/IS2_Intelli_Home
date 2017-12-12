@@ -21,7 +21,7 @@ const wwoApiKey = 'fda2e356d0ba46ecbc7153434171511';
 
 
 //mappa link input output e azioni
-var map = [{tipo:'luce',out1:'D1',out2:'D2',in1:'D3',in2:'D4',funzione_azione:'set_ogg1',funzione_ricezione:'read_ogg1'},{tipo:'tap',out1:'D6',out2:'D7',in1:'D8',in2:'D9',funzione_azione:'set_ogg2',funzione_ricezione:'read_ogg2'}]
+var map = [{tipo:'luce',out1:'4',in1:'17',funzione_azione:'set_ogg1',funzione_ricezione:'read_ogg1'},{tipo:'luce',out1:'27',in1:'22',funzione_azione:'set_ogg2',funzione_ricezione:'read_ogg2'}]
 
 
 
@@ -58,7 +58,8 @@ io.on('connection', function(socket){
     
     GPIO.read_ogg1(function(value){
         socket.emit('light', value);
-    });   
+    });
+
 
     socket.on('disconnect', function(){
       console.log('user disconnected');

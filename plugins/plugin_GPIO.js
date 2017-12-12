@@ -1,38 +1,43 @@
+import { exec } from 'child_process';
+
 var exports = module.exports = {};
 
 var Gpio = require('onoff').Gpio;
 
-var ambienti=[];
+var ambienti;
+global.count = 0;
 
 function Ambiente_luce(call_back){
     this.past_time = 0;
     this.last_staus = 0;
     this.callback=call_back;
+    this.lock = 0;
   }
   // class methods
   Ambiente_luce.crea_ascolto = function(pin,pout){
     console.log(this.callback);
-    var ascolto = new Gpio(17, 'in', 'both');
-    var out = new Gpio(4, 'out');
+    var ascolto = new Gpio(pin, 'in', 'both');
+    var out = new Gpio(pout, 'out');
+
 
     ascolto.watch(function (err, value) {
-        if(new Date().getTime()-past_time>200 && last_staus==0){
-            console.log(new Date().getTime()+"   "+past_time);
+        console.log("pulsante "+value);
+        console.log("this "+this);
+        if(last_staus==0 && lock==0){
             out.writeSync(1);
-            past_time=new Date().getTime();
             last_staus=1;
             this.callback(1);
-        }else if(new Date().getTime()-past_time>200 && last_staus==1){
+            console.log("last status "+last_staus);
+        }else if(last_staus==1 && lock==0){
             out.writeSync(0);
-            past_time=new Date().getTime();
-            this.callback(0); //ATTENZIOE! se premo pulsente e non c'è nessun soket collegato la funzione non esiste e termina con errore
             last_staus=0;
+            this.callback(0); //ATTENZIOE! se premo pulsente e non c'è nessun soket collegato la funzione non esiste e termina con errore
+            console.log("last status "+last_staus);
         }
+            if(value == 0) this.lock = 0;
+            if(value == 1) this.lock = 1;
     });
 }
-
-
-global.count = 0;
 
 var mappa;
 
@@ -46,10 +51,12 @@ exports.setup = function(map){
     for(var i=0; i<numero; i++){
         if(map[i].tipo == "luce"){
             //progremma per la gestione delle luci:
-            nome = mappa[i].funzione_ricezione
             //necessario per creare una funzione con nome definito a runtime! (nome assegnato dal'oggetto map.funzione_ricezione)
-            var f = new Function('exports','exports.'+nome+' = function(funz){bind(funz,0);}');
+            var f = new Function('exports','exports.'+mappa[i].funzione_ricezione+' = function(funz){bind(funz,count);}');
             f(exports);
+            //var f1 = new Function('exports','exports.'+mappa[i].funzione_azione+' = function(stato){}');
+            //f1(exports);
+            console.log(ambienti);
             Ambiente_luce.crea_ascolto(mappa[i].in1,map[i].out1);
             count++       //nota B: da implementare!! se no va solo una luce!!!!
         }
