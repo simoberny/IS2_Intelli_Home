@@ -27,7 +27,10 @@ apps.use('/ajax', speech);
 apps.get('/attuatori', function(req, res) {
     res.writeHead(200, {'Content-Type': 'text/html'});
 
+
+    //Nome dell'attuatore azionato - Ovviamente si possono usare nomi simbolici
     var evento = req.query.evento;
+    //Valore di arrivo del tasto - quindi come detto 1 o 0
     var stato = req.query.stato;
 
     var resp = "<strong>AJAX:</strong> " + evento + " - Stato evento: " + stato;

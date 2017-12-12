@@ -41,7 +41,7 @@
             <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">Luce Soggiorno</h5>
             <div class="btn-group" role="group" aria-label="Luce Soggiorno">
-              <button type="button" class="btn btn-secondary primo luci" value="off">On</button>
+              <button type="button" class="btn btn-secondary primo luci" value="0">On</button>
             </div>
             </div>
             <p class="mb-1">Luce a led soggiorno in alto</p>
@@ -51,8 +51,8 @@
             <div class="d-flex w-100 justify-content-between">
               <h5 class="mb-1">Tapparelle 1</h5>
               <div class="btn-group" role="group" aria-label="Tapparelle bagno di sinistra">
-          <button type="button" class="btn btn-secondary tappa" value="su"><i class="material-icons">expand_less</i></button>
-          <button type="button" class="btn btn-secondary tappa" value="giù"><i class="material-icons">expand_more</i></button>
+          <button type="button" class="btn btn-secondary tappa" value="1"><i class="material-icons">expand_less</i></button>
+          <button type="button" class="btn btn-secondary tappa" value="0"><i class="material-icons">expand_more</i></button>
         </div>
             </div>
             <p class="mb-1">Tapparelle bagno di sinistra</p>
@@ -62,7 +62,7 @@
             <div class="d-flex w-100 justify-content-between">
               <h5 class="mb-1">Luce cucina</h5>
               <div class="btn-group" role="group" aria-label="Luce cucina">
-          <button type="button" class="btn btn-secondary primo luci" value="off">On</button>
+          <button type="button" class="btn btn-secondary primo luci" value="0">On</button>
         </div>
             </div>
             <p class="mb-1">Luce principale cucina</p>
@@ -72,8 +72,8 @@
             <div class="d-flex w-100 justify-content-between">
               <h5 class="mb-1">Tapparelle bagni</h5>
                 <div class="btn-group" role="group" aria-label="Tapparelle bagni">
-                    <button type="button" class="btn btn-secondary tappa" value="su"><i class="material-icons">expand_less</i></button>
-                    <button type="button" class="btn btn-secondary tappa" value="giù"><i class="material-icons">expand_more</i></button>
+                    <button type="button" class="btn btn-secondary tappa" value="1"><i class="material-icons">expand_less</i></button>
+                    <button type="button" class="btn btn-secondary tappa" value="0"><i class="material-icons">expand_more</i></button>
                 </div>
             </div>
             <p class="mb-1">Tapparelle bagni</p>
@@ -88,19 +88,10 @@
 <script src="../../public/main.js"></script>
 <script>
 
-    var statoTapparelle = "idle";
-
     $(".btn-group .tappa").on("click", function(){
         var evento = $(this).parent();
         var label = evento.attr("aria-label");
         var stato = $(this).val();
-
-        if(stato == statoTapparelle){
-            stato = "idle";
-            statoTapparelle = "idle";
-        }else{
-            statoTapparelle = stato;
-        }        
 
         $.notify(label + " --> " + stato, "info");
 
@@ -120,11 +111,11 @@
         var statoTasto = $(this).val();
         var textTasto = "On";
 
-        if(statoTasto == "on"){
-            statoTasto = "off";
+        if(statoTasto == 1){
+            statoTasto = 0;
             textTasto = "On";
         }else{
-            statoTasto = "on";
+            statoTasto = 1;
             textTasto = "Off";
         }        
 
