@@ -8,8 +8,8 @@ var http = require('http').Server(apps);
 var io = require('socket.io')(http);
 
 var Gpio = require('onoff').Gpio;
-var LED = new Gpio(4, 'out');
-var button = new Gpio(17, 'in', 'both');
+//var LED = new Gpio(4, 'out');
+//var button = new Gpio(17, 'in', 'both');
 
 var GPIO = require ('./plugins/plugin_GPIO.js');
 
@@ -55,7 +55,7 @@ io.on('connection', function(socket){
         socket.emit('light', value);
     });
 */
-    
+
     GPIO.read_ogg1(function(value){
         socket.emit('light', value);
     });
@@ -75,7 +75,8 @@ apps.get('/attuatori', function(req, res) {
     var resp = "<strong>AJAX:</strong> " + evento + " - Stato evento: " + stato;
 
     var out = req.query.stato == "on" ? 1 : 0;
-    LED.writeSync(out);
+    GPIO.set_ogg2(out);
+    //LED.writeSync(out);
 
     res.write(resp);
     res.end();
