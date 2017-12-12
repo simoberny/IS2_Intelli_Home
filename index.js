@@ -3,10 +3,6 @@ var session = require('express-session');
 var url = require('url');
 var http = require('http');
 var speech = require('./speech.js');
-//var navigator = require('web-midi-api');
-
-const host = 'api.worldweatheronline.com';
-const wwoApiKey = 'fda2e356d0ba46ecbc7153434171511';
 
 var apps = express();
 
@@ -19,7 +15,7 @@ apps.use(express.static(__dirname));
 
 apps.get('/', function(req, res) {
     if(!req.session.message){
-        req.session.message = [];
+        req.session.message = [{position: 'comp', text: 'Ciao, come posso aiutarti?'}];
     }
     res.render('pages/index', {
         messages: req.session.message,

@@ -41,9 +41,7 @@
             <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">Luce Soggiorno</h5>
             <div class="btn-group" role="group" aria-label="Luce Soggiorno">
-              <button type="button" class="btn btn-secondary primo" value="on">On</button>
-              <button type="button" class="btn btn-secondary secondo" value="off">Off</button>
-              <button type="button" class="btn btn-secondary">Elimina</button>
+              <button type="button" class="btn btn-secondary primo luci" value="off">On</button>
             </div>
             </div>
             <p class="mb-1">Luce a led soggiorno in alto</p>
@@ -53,9 +51,8 @@
             <div class="d-flex w-100 justify-content-between">
               <h5 class="mb-1">Tapparelle 1</h5>
               <div class="btn-group" role="group" aria-label="Tapparelle bagno di sinistra">
-          <button type="button" class="btn btn-secondary" value="su"><i class="material-icons">expand_less</i></button>
-          <button type="button" class="btn btn-secondary" value="giù"><i class="material-icons">expand_more</i></button>
-          <button type="button" class="btn btn-secondary">Close</button>
+          <button type="button" class="btn btn-secondary tappa" value="su"><i class="material-icons">expand_less</i></button>
+          <button type="button" class="btn btn-secondary tappa" value="giù"><i class="material-icons">expand_more</i></button>
         </div>
             </div>
             <p class="mb-1">Tapparelle bagno di sinistra</p>
@@ -63,27 +60,23 @@
           </a>
           <a class="list-group-item list-group-item-action flex-column align-items-start">
             <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">Router wifi</h5>
-              <div class="btn-group" role="group" aria-label="Accensione router wifi">
-          <button type="button" class="btn btn-secondary primo" value="on">On</button>
-          <button type="button" class="btn btn-secondary secondo" value="off">Off</button>
-          <button type="button" class="btn btn-secondary">Elimina</button>
+              <h5 class="mb-1">Luce cucina</h5>
+              <div class="btn-group" role="group" aria-label="Luce cucina">
+          <button type="button" class="btn btn-secondary primo luci" value="off">On</button>
         </div>
             </div>
-            <p class="mb-1">Accensione router wifi</p>
-            <small class="text-muted">SSID: Unitn-x</small>
+            <p class="mb-1">Luce principale cucina</p>
+            <small class="text-muted">LED</small>
           </a>
             <a class="list-group-item list-group-item-action flex-column align-items-start">
             <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">Router wifi</h5>
-              <div class="btn-group" role="group" aria-label="Accensione router wifi">
-          <button type="button" class="btn btn-secondary primo" value="on">On</button>
-          <button type="button" class="btn btn-secondary secondo" value="off">Off</button>
-          <button type="button" class="btn btn-secondary">Elimina</button>
-        </div>
+              <h5 class="mb-1">Tapparelle bagni</h5>
+                <div class="btn-group" role="group" aria-label="Tapparelle bagni">
+                    <button type="button" class="btn btn-secondary tappa" value="su"><i class="material-icons">expand_less</i></button>
+                    <button type="button" class="btn btn-secondary tappa" value="giù"><i class="material-icons">expand_more</i></button>
+                </div>
             </div>
-            <p class="mb-1">Accensione router wifi</p>
-            <small class="text-muted">SSID: Unitn-x</small>
+            <p class="mb-1">Tapparelle bagni</p>
           </a>
         </div>
     </div>
@@ -97,7 +90,7 @@
 
     var statoTapparelle = "idle";
 
-    $(".btn-group button").on("click", function(){
+    $(".btn-group .tappa").on("click", function(){
         var evento = $(this).parent();
         var label = evento.attr("aria-label");
         var stato = $(this).val();
@@ -109,10 +102,42 @@
             statoTapparelle = stato;
         }        
 
+        $.notify(label + " --> " + stato, "info");
+
         $.ajax({
             method: "GET",
             url: "/attuatori",
             data: { evento: label, stato: stato }
+        }).done(function( data ) {
+            $("#alert").addClass("alert").alert();
+            $(".print-event").html(data);
+        });
+    });
+
+    $(".btn-group .luci").on("click", function(){
+        var evento = $(this).parent();
+        var label = evento.attr("aria-label");
+        var statoTasto = $(this).val();
+        var textTasto = "On";
+
+        if(statoTasto == "on"){
+            statoTasto = "off";
+            textTasto = "On";
+        }else{
+            statoTasto = "on";
+            textTasto = "Off";
+        }        
+
+        $(this).val(statoTasto);
+        $(this).text(textTasto);
+        $(this).toggleClass("active_stato");
+
+        $.notify(label + " --> " + statoTasto, "info");
+
+        $.ajax({
+            method: "GET",
+            url: "/attuatori",
+            data: { evento: label, stato: statoTasto }
         }).done(function( data ) {
             $("#alert").addClass("alert").alert();
             $(".print-event").html(data);

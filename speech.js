@@ -1,4 +1,5 @@
 var express = require('express');
+var http = require('http');
 
 //Inclusione libreria APIAI
 var apiai = require('apiai');
@@ -7,12 +8,17 @@ var app = apiai("1d6aa22653f341be840ff33c0f2dda0c");
 
 var router = express.Router();
 
+//Api meteo
+const host = 'api.wunderground.com';
+const wwoApiKey = '942594c6e5922dd9';
+
 // middleware that is specific to this router
 router.use(function timeLog(req, res, next) {
   console.log('Time: ', Date.now());
   next();
 });
-// define the home page route
+
+//Pagina principale
 router.get('/', function(req, res) {
 	if(!req.session.message){
         req.session.message = [];
@@ -68,13 +74,23 @@ router.get('/', function(req, res) {
     request.end();
 });
 
+
+//Implementazione Meteo
+
 function callWeatherApi (city, date) {
     return new Promise((resolve, reject) => {
       // Create the path for the HTTP request to get the weather
-      let path = '/premium/v1/weather.ashx?format=json&num_of_days=1' +
-        '&q=' + encodeURIComponent(city) + '&key=' + wwoApiKey + '&date=' + date + '&lang=it';
+      let path = '/api/' + wwoApiKey + '/forecast/lang:IT/q/Italy/' + encodeURIComponent(city) + ".json";
 
       console.log('API Request: ' +  path);
+
+      var today = new Date();
+      var dd = today.getDate();
+
+      var wday = date.slice(-2);
+      var period = 2*(wday - dd);
+
+      console.log("Period:" +  2*(wday - dd));
 
       http.get({host: host, path: path}, (res) => {
         let body = ''; // var to store the response chunks
@@ -82,20 +98,18 @@ function callWeatherApi (city, date) {
         res.on('end', () => {
           // After all the data has been received parse the JSON for desired data
           let response = JSON.parse(body);
-          let forecast = response['data']['weather'][0];
-          let location = response['data']['request'][0];
-          let conditions = response['data']['current_condition'][0];
-          let currentConditions = conditions['weatherDesc'][0]['value'];
-          let icon = conditions['weatherIconUrl'][0]['value'];
-          let italian = conditions['lang_it'][0]['value'];
+          let forecast = response["forecast"]['txt_forecast']['forecastday'][period];
+          console.log(forecast);
+
+
+          
+          let conditions = forecast.fcttext_metric;
+          let icon = forecast.icon_url;
+          let giorno = forecast.title;
 
           // Create response
-          let output = `Il meteo nella ${location['type']} 
-          ${location['query']} è ${italian} con le temperature massime previste di
-          ${forecast['maxtempC']}°C e minime di
-          ${forecast['mintempC']}°C in data
-          ${forecast['date']}.`;
-          // Resolve the promise with the output text
+          let output = `Il meteo a ${city} in data ${giorno} ${date} è ${conditions}.`;
+
           resolve({output: output, icon: icon});
         });
         res.on('error', (error) => {
