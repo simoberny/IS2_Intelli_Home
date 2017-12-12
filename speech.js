@@ -35,35 +35,63 @@ router.get('/', function(req, res) {
     });
 
     request.on('response', function(response) { 
-        let city = response.result.parameters['geo-city'];
-        let date = response.result.parameters['date'];
-        console.log("Città: " + city);
-        console.log('Data: ' + date);
+        var intent = response.result.metadata["intentName"];
+        console.log("Intent: " + intent);
 
-        if(!response.result.parameters['geo-city'] || !response.result.parameters['date']){
-            req.session.message.push({position: 'comp', text: response.result.fulfillment.speech});
-            res.write(response.result.fulfillment.speech);
-            res.end();
-            //console.log(response);
-        }else{
-            callWeatherApi(city, date).then((output) => {      
-                req.session.message.push({position: 'comp', text: output.output, table: true, geo: city, icon: output.icon});
-                
-                var htmlWeather = '' + 
-                '<div class="card">' +
-                    '<div class="card-body">' +
-                        '<h4 class="card-title">Meteo' + city + '</h4>' +
-                        '<h6 class="card-subtitle mb-2 text-muted">Weather Online</h6>' +
-                        '<img src="'+ output.icon +'" alt="..." class="img-thumbnail">' +
-                        '<p class="card-text">' + output.output + '</p>' +
-                    '</div>'+
-                '</div>';
+        switch(intent){
+            case "weather":
+                //Gestione conversazioni meteo
+                let city = response.result.parameters['geo-city'];
+                let date = response.result.parameters['date'];
 
-                res.write(htmlWeather);
+                if(city && date){
+                    callWeatherApi(city, date).then((output) => {      
+                        req.session.message.push({position: 'comp', text: output.output, table: true, geo: city, icon: output.icon});
+                        
+                        var htmlWeather = '' + 
+                        '<div class="card">' +
+                            '<div class="card-body">' +
+                                '<h4 class="card-title">Meteo' + city + '</h4>' +
+                                '<h6 class="card-subtitle mb-2 text-muted">Weather Online</h6>' +
+                                '<img src="'+ output.icon +'" alt="..." class="img-thumbnail">' +
+                                '<p class="card-text">' + output.output + '</p>' +
+                            '</div>'+
+                        '</div>';
+    
+                        res.write(htmlWeather);
+                        res.end();
+                    }).catch((error) => {
+                        console.log("Errore: " + error)
+                    });
+                }else{
+                    console.log("Mancanza dati per ottenere meteo!");
+                }
+
+                break;
+            case "servizio_Attuatori":
+                //Gestione servizio attuatori
+
+                //Nome attuatore (tapparelle, luci...)
+                let attuatore = response.result.parameters['attuatori'];
+                //Azione attuatore (0 o 1)
+                let azione = response.result.parameters['azione_attuatori'];
+                //Posizione attuatore (cucina, soggiorno)
+                let posizione = response.result.parameters['zone'];
+                console.log("Attuatore: " + attuatore);
+                console.log('Posizione: ' + posizione);
+                console.log('Azione: ' + azione);
+
+                req.session.message.push({position: 'comp', text: response.result.fulfillment.speech});
+                res.write(response.result.fulfillment.speech);
                 res.end();
-            }).catch((error) => {
-                console.log("Errore: " + error)
-            });
+
+                break;
+            default:
+                //Gestione discorsi normali
+                req.session.message.push({position: 'comp', text: response.result.fulfillment.speech});
+                res.write(response.result.fulfillment.speech);
+                res.end();
+                break;
         }
     });
     
