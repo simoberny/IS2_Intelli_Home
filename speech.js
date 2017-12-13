@@ -1,3 +1,5 @@
+var exports = module.exports = {};
+
 var express = require('express');
 var http = require('http');
 
@@ -14,12 +16,22 @@ const wwoApiKey = '942594c6e5922dd9';
 
 // middleware that is specific to this router
 router.use(function timeLog(req, res, next) {
+    exports = module.exports = {};
   console.log('Time: ', Date.now());
   next();
 });
 
+//var GPIO;
+/*
+exports.set_gpio=function(gpio){
+    GPIO=gpio;
+    console.log(GPIO);
+    GPIO.set_ogg2(1);
+}
+*/
 //Pagina principale
 router.get('/', function(req, res) {
+
 	if(!req.session.message){
         req.session.message = [];
     }
@@ -45,9 +57,9 @@ router.get('/', function(req, res) {
                 let date = response.result.parameters['date'];
 
                 if(city && date){
-                    callWeatherApi(city, date).then((output) => {      
+                    callWeatherApi(city, date).then((output) => {
                         req.session.message.push({position: 'comp', text: output.output, table: true, geo: city, icon: output.icon});
-                        
+
                         var htmlWeather = '' + 
                         '<div class="card">' +
                             '<div class="card-body">' +
@@ -80,6 +92,27 @@ router.get('/', function(req, res) {
                 console.log("Attuatore: " + attuatore);
                 console.log('Posizione: ' + posizione);
                 console.log('Azione: ' + azione);
+
+                if(attuatore=='luce'&&posizione=='soggiorno'&&azione=='1'){
+                GPIO.set_ogg1(1);
+                }
+                if(attuatore=='luce'&&posizione=='soggiorno'&&azione=='0'){
+                GPIO.set_ogg1(0);
+                }
+
+                if(attuatore=='luce'&&posizione=='cucina'&&azione=='1'){
+                GPIO.set_ogg2(1);
+                }
+                if(attuatore=='luce'&&posizione=='cucina'&&azione=='0'){
+                GPIO.set_ogg2(0);
+                }
+
+                if(attuatore=='tapparella'&&posizione=='cucina'&&azione=='1'){
+                GPIO.set_ogg3(1);
+                }
+                if(attuatore=='tapparella'&&posizione=='cucina'&&azione=='0'){
+                GPIO.set_ogg3(0);
+                }
 
                 req.session.message.push({position: 'comp', text: response.result.fulfillment.speech});
                 res.write(response.result.fulfillment.speech);
