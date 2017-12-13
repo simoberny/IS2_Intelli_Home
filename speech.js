@@ -95,16 +95,20 @@ router.get('/', function(req, res) {
 
                 if(attuatore=='luce'&&posizione=='soggiorno'&&azione=='1'){
                 GPIO.set_ogg1(1);
+                io.sockets.emit('luce_soggiorno', 1);
                 }
                 if(attuatore=='luce'&&posizione=='soggiorno'&&azione=='0'){
                 GPIO.set_ogg1(0);
+                io.sockets.emit('luce_soggiorno', 0);
                 }
 
                 if(attuatore=='luce'&&posizione=='cucina'&&azione=='1'){
                 GPIO.set_ogg2(1);
+                io.sockets.emit('luce_cucina', 1);
                 }
                 if(attuatore=='luce'&&posizione=='cucina'&&azione=='0'){
                 GPIO.set_ogg2(0);
+                io.sockets.emit('luce_cucina', 0);
                 }
 
                 if(attuatore=='tapparella'&&posizione=='cucina'&&azione=='1'){

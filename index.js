@@ -1,8 +1,9 @@
 var express = require('express');
 var session = require('express-session');
 var url = require('url');
-var http = require('http');
 var speech = require('./speech.js');
+
+
 //agginto x api
 global.GPIO = require ('./plugins/plugin_GPIO.js');
 
@@ -11,6 +12,8 @@ var map = [{tipo:'luce',out1:'4',in1:'17',funzione_azione:'set_ogg1',funzione_ri
 
 var apps = express();
 var http = require('http').Server(apps);
+
+global.io = require('socket.io')(http);
 
 
 
@@ -31,6 +34,15 @@ apps.get('/', function(req, res) {
 
 apps.use('/ajax', speech);
 
+io.on('connection', function(socket){
+    console.log('a user connected');
+    //socket.emit('luce_cucina', value);
+    socket.on('disconnect', function(){
+      console.log('user disconnected');
+    });
+  });
+
+
 apps.get('/attuatori', function(req, res) {
     res.writeHead(200, {'Content-Type': 'text/html'});
 
@@ -44,6 +56,7 @@ apps.get('/attuatori', function(req, res) {
     if(evento=="Luce Soggiorno"){
         var out = stato == "1" ? 1 : 0;        
         GPIO.set_ogg1(out);
+        io.sockets.emit('luce_soggiorno', stato);
     }
     if(evento=="Tapparelle bagno di sinistra"){
         GPIO.set_ogg3(stato);
@@ -51,6 +64,7 @@ apps.get('/attuatori', function(req, res) {
     if(evento=="Luce cucina"){
         var out = stato == "1" ? 1 : 0;
         GPIO.set_ogg2(out);
+        io.sockets.emit('luce_cucina', stato);
     }
 
     var resp = "<strong>AJAX:</strong> " + evento + " - Stato evento: " + stato;
@@ -62,13 +76,17 @@ apps.get('/attuatori', function(req, res) {
 http.listen(apps.get('port'), function() {
     console.log('App is running, server is listening on port ', apps.get('port'));
     GPIO.setup(map);
+
     GPIO.read_ogg1(function(value){
-        //socket.emit('light', value);
+        io.sockets.emit('luce_soggiorno', value);
         console.log("read ogg 1");
     });
+
     GPIO.read_ogg2(function(value){
+        io.sockets.emit('luce_cucina', value);
         console.log("read ogg 2");
     });
+
 });
 
 

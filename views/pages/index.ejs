@@ -41,7 +41,7 @@
             <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">Luce Soggiorno</h5>
             <div class="btn-group" role="group" aria-label="Luce Soggiorno">
-              <button type="button" class="btn btn-secondary primo luci" value="0">On</button>
+              <button type="button" class="btn btn-secondary primo luci soggiorno" value="0">On</button>
             </div>
             </div>
             <p class="mb-1">Luce a led soggiorno in alto</p>
@@ -62,7 +62,7 @@
             <div class="d-flex w-100 justify-content-between">
               <h5 class="mb-1">Luce cucina</h5>
               <div class="btn-group" role="group" aria-label="Luce cucina">
-          <button type="button" class="btn btn-secondary primo luci" value="0">On</button>
+          <button type="button" class="btn btn-secondary primo luci cucina" value="0">On</button>
         </div>
             </div>
             <p class="mb-1">Luce principale cucina</p>
@@ -85,6 +85,42 @@
 
 <% include ../partials/settings %>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+<script>
+  var socket = io();
+
+  socket.on('luce_soggiorno', function (data) { //get button status from client
+    if(data == 1){
+        $(".btn-group .soggiorno").text("On"); //change checkbox according to push button on Raspberry Pi
+        $(".btn-group .soggiorno").val(data);
+        $(".btn-group .soggiorno").toggleClass("active_stato");
+    }
+    if(data == 0){
+        $(".btn-group .soggiorno").text("Off"); //change checkbox according to push button on Raspberry Pi
+        $(".btn-group .soggiorno").val(data);
+        $(".btn-group .soggiorno").toggleClass("active_stato");
+    }
+    console.log(" " + data);
+});
+
+socket.on('luce_cucina', function (data) { //get button status from client
+    if(data == 1){
+        $(".btn-group .cucina").text("On"); //change checkbox according to push button on Raspberry Pi
+        $(".btn-group .cucina").val(data);
+        $(".btn-group .cucina").toggleClass("active_stato");
+    }
+    if(data == 0){
+        $(".btn-group .cucina").text("Off"); //change checkbox according to push button on Raspberry Pi
+        $(".btn-group .cucina").val(data);
+        $(".btn-group .cucina").toggleClass("active_stato");
+    }
+    console.log(" " + data);
+});
+</script>
+
+
+
 <script src="../../public/main.js"></script>
 <script>
 
@@ -109,19 +145,19 @@
         var evento = $(this).parent();
         var label = evento.attr("aria-label");
         var statoTasto = $(this).val();
-        var textTasto = "On";
+        //var textTasto = "On";
 
         if(statoTasto == 1){
             statoTasto = 0;
-            textTasto = "On";
+            textTasto = "Off";
         }else{
             statoTasto = 1;
-            textTasto = "Off";
+            textTasto = "On";
         }        
 
         $(this).val(statoTasto);
         $(this).text(textTasto);
-        $(this).toggleClass("active_stato");
+        //$(this).toggleClass("active_stato");
 
         $.notify(label + " --> " + statoTasto, "info");
 
