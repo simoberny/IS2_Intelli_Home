@@ -94,12 +94,12 @@
     if(data == 1){
         $(".btn-group .soggiorno").text("On"); //change checkbox according to push button on Raspberry Pi
         $(".btn-group .soggiorno").val(data);
-        $(".btn-group .soggiorno").toggleClass("active_stato");
+        $(".btn-group .soggiorno").addClass("active_stato");
     }
     if(data == 0){
         $(".btn-group .soggiorno").text("Off"); //change checkbox according to push button on Raspberry Pi
         $(".btn-group .soggiorno").val(data);
-        $(".btn-group .soggiorno").toggleClass("active_stato");
+        $(".btn-group .soggiorno").removeClass("active_stato");
     }
     console.log(" " + data);
 });
@@ -108,12 +108,12 @@ socket.on('luce_cucina', function (data) { //get button status from client
     if(data == 1){
         $(".btn-group .cucina").text("On"); //change checkbox according to push button on Raspberry Pi
         $(".btn-group .cucina").val(data);
-        $(".btn-group .cucina").toggleClass("active_stato");
+        $(".btn-group .cucina").addClass("active_stato");
     }
     if(data == 0){
         $(".btn-group .cucina").text("Off"); //change checkbox according to push button on Raspberry Pi
         $(".btn-group .cucina").val(data);
-        $(".btn-group .cucina").toggleClass("active_stato");
+        $(".btn-group .cucina").removeClass("active_stato");
     }
     console.log(" " + data);
 });
