@@ -1,9 +1,0 @@
-users:
-	name(pk),
-	age,
-	password
-
-objects
-	name,
-	room,
-	pluginName
