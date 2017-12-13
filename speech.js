@@ -65,6 +65,9 @@ router.get('/', function(req, res) {
                     });
                 }else{
                     console.log("Mancanza dati per ottenere meteo!");
+                    req.session.message.push({position: 'comp', text: response.result.fulfillment.speech});
+                    res.write(response.result.fulfillment.speech);
+                    res.end();
                 }
 
                 break;
