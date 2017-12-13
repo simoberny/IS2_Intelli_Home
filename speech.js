@@ -17,7 +17,6 @@ const wwoApiKey = '942594c6e5922dd9';
 // middleware that is specific to this router
 router.use(function timeLog(req, res, next) {
     exports = module.exports = {};
-  console.log('Time: ', Date.now());
   next();
 });
 
@@ -77,6 +76,9 @@ router.get('/', function(req, res) {
                     });
                 }else{
                     console.log("Mancanza dati per ottenere meteo!");
+                    req.session.message.push({position: 'comp', text: response.result.fulfillment.speech});
+                    res.write(response.result.fulfillment.speech);
+                    res.end();
                 }
 
                 break;

@@ -16,9 +16,9 @@
 
 <div class="container-fluid">
   <div class="row justify-content-center">
-    <div class="col-12 col-md-6 col-lg-4">
+    <div class="col-12 col-md-6 col-lg-5 col-xl-4">
       <div class="chat">
-        <input type="text" name="input" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Chiedimi qualcosa">  
+        <input type="text" name="input" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Chiedimi qualcosa" autocomplete="off">  
         <div class="action_button" id="startBtn" disabled="disabled">
           <i class="material-icons">mic</i>
         </div>
@@ -35,7 +35,7 @@
             </ul>
         </div>
     </div>
-    <div class="col-12 col-md-6 col-lg-8">
+    <div class="col-12 col-md-6 col-lg-7 col-xl-8">
         <div class="list-group part_2">
           <a class="list-group-item list-group-item-action flex-column align-items-start">
             <div class="d-flex w-100 justify-content-between">
@@ -85,6 +85,14 @@
 
 <% include ../partials/settings %>
 </div>
+
+<script>
+    if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+             .register('/public/service-worker.js')
+             .then(function() { console.log('Service Worker Registered'); });
+    }
+</script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
 <script>
